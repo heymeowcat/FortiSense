@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.impute import SimpleImputer
+import pickle 
 
 data = pd.read_csv('https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv')
 
@@ -41,38 +42,41 @@ print(f'R-squared: {r2:.2f}')
 
 model_and_scaler = {
     "model": model,
-    "scaler": scaler
+    "scaler": scaler,
+    "X_train_columns": X_train.columns 
 }
 
+with open("model_and_scaler.pkl", "wb") as f:
+    pickle.dump(model_and_scaler, f)
 
 
-# test
-example_data = {
-    'longitude': -122.23,
-    'latitude': 37.88,
-    'housing_median_age': 41,
-    'total_rooms': 5,
-    'total_bedrooms': 3.0, 
-    'population': 322,
-    'households': 126,
-    'median_income': 8.3252,
-    'ocean_proximity': 'NEAR BAY'
-}
+# # test
+# example_data = {
+#     'longitude': -122.23,
+#     'latitude': 37.88,
+#     'housing_median_age': 41,
+#     'total_rooms': 5,
+#     'total_bedrooms': 3.0, 
+#     'population': 322,
+#     'households': 126,
+#     'median_income': 8.3252,
+#     'ocean_proximity': 'NEAR BAY'
+# }
 
-example_df = pd.DataFrame([example_data])
+# example_df = pd.DataFrame([example_data])
 
-example_df = pd.get_dummies(example_df, columns=['ocean_proximity'], drop_first=True)
+# example_df = pd.get_dummies(example_df, columns=['ocean_proximity'], drop_first=True)
 
-# all one-hot columns
-for col in X_train.columns:
-    if col not in example_df.columns:
-        example_df[col] = 0  # adding missing columns and fill with 0
+# # all one-hot columns
+# for col in X_train.columns:
+#     if col not in example_df.columns:
+#         example_df[col] = 0  # adding missing columns and fill with 0
 
 
 
-example_scaled = scaler.transform(example_df)
+# example_scaled = scaler.transform(example_df)
 
-# test the prediction
-example_prediction = model.predict(example_scaled)
+# # test the prediction
+# example_prediction = model.predict(example_scaled)
 
-print(f"Predicted median house value for the example: {example_prediction[0]:.2f}")
+# print(f"Predicted median house value for the example: {example_prediction[0]:.2f}")
